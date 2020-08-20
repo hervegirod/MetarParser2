@@ -218,7 +218,3 @@ To change the locale use the method `setLocale(Locale)` of the class `Messages.j
 Messages.getInstance().setLocale(Locale.FRENCH); // Changes the locale to french.
 ```
 
-If you are willing to add a new locale or contribute to the project please see [Contributing.md file](CONTRIBUTING.md).
-
-[Jetbrains](https://www.jetbrains.com/?from=metarParser) open source project.
-
