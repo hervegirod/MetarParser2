@@ -1,7 +1,7 @@
 package io.github.mivek.model;
 
+import io.github.mivek.internationalization.MessageUtils;
 import io.github.mivek.internationalization.Messages;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author mivek
  */
-public abstract class AbstractWeatherContainer {
+public abstract class AbstractWeatherContainer implements WeatherElement {
    /**
     * The wind.
     */
@@ -117,8 +117,7 @@ public abstract class AbstractWeatherContainer {
     * Adds a weather condition to the list.
     *
     * @param weatherCondition the weather condition to add.
-    * @return true if the weather condition has been added to the list, false
-    * otherwise.
+    * @return true if the weather condition has been added to the list, false otherwise.
     */
    public boolean addWeatherCondition(final WeatherCondition weatherCondition) {
       if (weatherCondition == null) {
@@ -202,26 +201,41 @@ public abstract class AbstractWeatherContainer {
       this.remark = remark;
    }
 
+   @Override
+   public String getMessage(short level) {
+      Messages messages = Messages.getInstance();
+      StringBuilder buf = new StringBuilder();
+
+      if (wind != null) {
+         buf.append(" ").append(wind.getMessage(level));
+      }
+      if (visibility != null) {
+         buf.append(" ").append(visibility.getMessage(level));
+      }
+      if (verticalVisibility != null && level > MessageLevel.NORMAL) {
+         buf.append(messages.getContString("ToString.vertical.visibility", verticalVisibility));
+      }
+      if (clouds != null && level > MessageLevel.NORMAL) {
+         buf.append(messages.getContString("ToString.clouds", clouds));
+      }
+      if (weatherConditions != null && level > MessageLevel.NORMAL) {
+         buf.append(MessageUtils.getContString("ToString.weather.conditions", weatherConditions));
+      }
+      if (windShear != null) {
+         buf.append(" ").append(windShear.getMessage(level));
+      }
+      buf.append(messages.getContString("ToString.cavok", cavok));
+      if (remark != null && level > MessageLevel.NORMAL) {
+         buf.append(messages.getContString("ToString.remark", remark));
+      }
+      return buf.toString();
+   }
+
    /**
     * @return string describing the object.
     */
    @Override
    public String toString() {
-      ToStringBuilder builder = new ToStringBuilder(this);
-      if (wind != null) {
-         builder.appendToString(wind.toString());
-      }
-      if (visibility != null) {
-         builder.appendToString(visibility.toString());
-      }
-      builder.append(Messages.getInstance().getString("ToString.vertical.visibility"), verticalVisibility).
-         append(Messages.getInstance().getString("ToString.clouds"), clouds.toString()).
-         append(Messages.getInstance().getString("ToString.weather.conditions"), weatherConditions.toString());
-      if (windShear != null) {
-         builder.appendToString(windShear.toString());
-      }
-      builder.append(Messages.getInstance().getString("ToString.cavok"), cavok).
-         append(Messages.getInstance().getString("ToString.remark"), remark);
-      return builder.toString();
+      return getMessage(MessageLevel.FULL);
    }
 }

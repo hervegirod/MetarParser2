@@ -1,25 +1,33 @@
 package io.github.mivek.model;
 
 import io.github.mivek.internationalization.Messages;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.time.LocalTime;
 
 /**
- * @author mivek
- * Parent class of {@link Metar} and {@link TAF}.
+ * @author mivek Parent class of {@link Metar} and {@link TAF}.
  */
 public abstract class AbstractWeatherCode extends AbstractWeatherContainer {
 
-   /** Integer for the day of the metar. */
+   /**
+    * Integer for the day of the metar.
+    */
    private Integer day;
-   /** Time of the metar. */
+   /**
+    * Time of the metar.
+    */
    private LocalTime time;
-   /** Airport of the metar. */
+   /**
+    * Airport of the metar.
+    */
    private Airport airport;
-   /** Original message of the metar. */
+   /**
+    * Original message of the metar.
+    */
    private String message;
-   /** The identifier of the station. */
+   /**
+    * The identifier of the station.
+    */
    private String station;
 
    /**
@@ -92,17 +100,25 @@ public abstract class AbstractWeatherCode extends AbstractWeatherContainer {
       this.station = station;
    }
 
+   @Override
+   public String getMessage(short level) {
+      Messages messages = Messages.getInstance();
+      StringBuilder buf = new StringBuilder();
+
+      buf.append(messages.getString("ToString.day.month", day)).
+         append(messages.getContMessage("ToString.report.time", level, time)).
+         append(messages.getContMessage("ToString.airport", level, airport)).
+         append(" ").
+         append(super.getMessage(level));
+
+      return buf.toString();
+   }
+
    /**
     * @return a description of the object.
     */
    @Override
    public String toString() {
-      return new ToStringBuilder(this).
-         append(Messages.getInstance().getString("ToString.day.month"), day).
-         append(Messages.getInstance().getString("ToString.report.time"), time).
-         append(Messages.getInstance().getString("ToString.airport"), airport).
-         appendSuper(super.toString()).
-         append(Messages.getInstance().getString("ToString.message"), message).
-         toString();
+      return getMessage(MessageLevel.FULL);
    }
 }

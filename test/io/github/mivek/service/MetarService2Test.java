@@ -1,11 +1,11 @@
 package io.github.mivek.service;
 
-import io.github.mivek.model.Airport;
+import static org.junit.Assert.assertEquals;
 import io.github.mivek.model.Metar;
-import java.time.LocalTime;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
+import io.github.mivek.model.MessageLevel;
+import io.github.mivek.model.Wind;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -14,12 +14,11 @@ import org.junit.Test;
  *
  * @since 0.1
  */
-public class MetarServiceTest {
-   private static String metarEncoded = "LFPG 131830Z 19005KT 170V250 9999 -SHRA FEW040TCU SCT086 16/08 Q1011";
-   private static String metarEncoded2 = "KMEM 230853Z AUTO 18014G18KT 10SM CLR 16/M02 A3008 RMK AO2 SLP117\n"
+public class MetarService2Test {
+   private static String metarEncoded = "KMEM 230853Z AUTO 18014G18KT 10SM CLR 16/M02 A3008 RMK AO2 SLP117\n"
       + "     T01561022 TSNO $";
 
-   public MetarServiceTest() {
+   public MetarService2Test() {
    }
 
    @BeforeClass
@@ -42,14 +41,17 @@ public class MetarServiceTest {
     * Test of decode method, of class MetarService.
     */
    @Test
-   public void testDecode() throws Exception {
-      System.out.println("MetarServiceTest : testDecode");
+   public void testWindToString() throws Exception {
+      System.out.println("MetarService2Test : testWindToString");
+
       MetarService service = MetarService.getInstance();
       Metar metar = service.decode(metarEncoded);
+      Wind wind = metar.getWind();
 
-      Airport airport = metar.getAirport();
-      assertEquals("Airport", "LFPG", airport.getIcao());
+      String str = wind.getMessage(MessageLevel.COMPACT);
+      assertEquals("speed 14 KT direction 180", str);
 
-      LocalTime time = metar.getTime();
+      str = wind.getMessage(MessageLevel.NORMAL);
+      assertEquals("speed 14 KT direction 180 gusts 18", str);
    }
 }

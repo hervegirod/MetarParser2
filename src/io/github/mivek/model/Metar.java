@@ -3,7 +3,6 @@ package io.github.mivek.model;
 import io.github.mivek.internationalization.Messages;
 import io.github.mivek.model.trend.AbstractMetarTrend;
 import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +95,7 @@ public class Metar extends AbstractWeatherCode {
    }
 
    private void computeHumidity() {
+      // See https://www.quora.com/Is-there-a-way-to-calculate-relative-humidity
       double e = 6.11f * (float) Math.pow(10, 7.5f * dewPoint / 237.7 + dewPoint);
       double esat = 6.11f * Math.pow(10, (double) (7.5f * temperature) / (237.7f + temperature));
       humidity = (int) (e / esat * 100);
@@ -174,6 +174,11 @@ public class Metar extends AbstractWeatherCode {
       trends.add(Validate.notNull(trend));
    }
 
+   /**
+    * Return the relative humididy (computed with dew point and temperature)
+    *
+    * @return the relative humididy
+    */
    public Integer getHumidity() {
       return humidity;
    }
@@ -188,16 +193,28 @@ public class Metar extends AbstractWeatherCode {
    }
 
    @Override
+   public String getMessage(short level) {
+      Messages messages = Messages.getInstance();
+      StringBuilder buf = new StringBuilder();
+
+      buf.append(super.getMessage(level)).
+         append(messages.getMessage("ToString.temperature", level, temperature)).
+         append(messages.getContMessage("ToString.dew.point", level, dewPoint)).
+         append(messages.getContMessage("ToString.altimeter", level, altimeter));
+      if (level > MessageLevel.COMPACT) {
+         buf.append(messages.getContString("ToString.nosig", nosig)).
+            append(messages.getContString("ToString.auto", auto));
+      }
+      if (level > MessageLevel.NORMAL) {
+         buf.append(messages.getContString("ToString.runway.info", runways.toString()))
+            .append(messages.getContString("ToString.trends", trends.toString()));
+      }
+
+      return buf.toString();
+   }
+
+   @Override
    public final String toString() {
-      return new ToStringBuilder(this).
-         appendSuper(super.toString()).
-         append(Messages.getInstance().getString("ToString.temperature"), temperature).
-         append(Messages.getInstance().getString("ToString.dew.point"), dewPoint).
-         append(Messages.getInstance().getString("ToString.altimeter"), altimeter).
-         append(Messages.getInstance().getString("ToString.nosig"), nosig).
-         append(Messages.getInstance().getString("ToString.auto"), auto).
-         append(Messages.getInstance().getString("ToString.runway.info"), runways.toString()).
-         append(Messages.getInstance().getString("ToString.trends"), trends.toString()).
-         toString();
+      return getMessage(MessageLevel.FULL);
    }
 }

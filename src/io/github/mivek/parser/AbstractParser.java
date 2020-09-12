@@ -128,7 +128,7 @@ public abstract class AbstractParser<T extends AbstractWeatherCode> {
          if (container.getVisibility() == null) {
             container.setVisibility(new Visibility());
          }
-         container.getVisibility().setMainVisibility(">10km");
+         container.getVisibility().setMainVisibility(">10km", 10000);
          return true;
       }
 
