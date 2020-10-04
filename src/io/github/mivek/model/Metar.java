@@ -96,9 +96,9 @@ public class Metar extends AbstractWeatherCode {
 
    private void computeHumidity() {
       // See https://www.quora.com/Is-there-a-way-to-calculate-relative-humidity
-      double e = 6.11f * (float) Math.pow(10, 7.5f * dewPoint / 237.7 + dewPoint);
-      double esat = 6.11f * Math.pow(10, (double) (7.5f * temperature) / (237.7f + temperature));
-      humidity = (int) (e / esat * 100);
+      // See https://bmcnoldy.rsmas.miami.edu/humidity_conversions.pdf
+      humidity = (int) (100 * Math.exp(17.625d * dewPoint / (243.04d + dewPoint))
+         / Math.exp(17.625d * temperature / (243.04d + temperature)));
    }
 
    /**
