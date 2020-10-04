@@ -191,11 +191,15 @@ Messages.setLocale(Locale.FRENCH); // Changes the locale to french.
 
 #### History
 Changes from the original project:
--   Remove Polish messages
--   Fix some messages
--   Make the toString() method for elements in TAF or METAR closer to a real decoded TAF or METAR
--   Add the Sear level pressure value
--   Compute the relative humidity 
--   Avoid to include in the string messages values not present in the TAF or METAR
--   Allow to get a compact, normal, or full message
+0.1 : 
+-  Remove Polish messages
+-  Fix some messages
+-  Make the toString() method for elements in TAF or METAR closer to a real decoded TAF or METAR
+-  Add the Sear level pressure value
+-  Compute the relative humidity 
+-  Avoid to include in the string messages values not present in the TAF or METAR
+-  Allow to get a compact, normal, or full message
+
+0.2 : 
+- Fix the humidity computation
 
