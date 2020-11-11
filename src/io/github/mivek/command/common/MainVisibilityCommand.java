@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 /**
  * @author mivek
+ * @version 0.4
  */
 public final class MainVisibilityCommand implements Command {
    /** Pattern for the main visibility. */
@@ -28,7 +29,7 @@ public final class MainVisibilityCommand implements Command {
       int value = 0;
       String valueS = matches[1];
       if ("9999".equals(valueS)) {
-         valueS = ">10km";
+         valueS = "CAVOK";
          value = 10000;
       } else {
          value = Integer.parseInt(valueS);
