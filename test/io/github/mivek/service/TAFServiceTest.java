@@ -11,13 +11,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import io.github.mivek.model.MessageLevel;
+import io.github.mivek.model.Visibility;
 
 /**
  *
- * @author scdsahv
+ * @since 0.4
  */
 public class TAFServiceTest {
-   private static String tafEncoded = "TAF LFPG 150500Z 1506/1612 17005KT 6000 SCT012 \n"
+   private static String tafEncoded = "TAF LFPG 150500Z 1506/1612 17005KT CAVOK SCT012 \n"
       + "TEMPO 1506/1509 3000 BR BKN006 PROB40 \n"
       + "TEMPO 1506/1508 0400 BCFG BKN002 PROB40 \n"
       + "TEMPO 1512/1516 4000 -SHRA FEW030TCU BKN040 \n"
@@ -118,4 +119,20 @@ public class TAFServiceTest {
       assertEquals("temperature 7 °C day 16 at 5:00", str);
    }
 
+   /**
+    * Test of decode method, of class TAFService.
+    */
+   @Test
+   public void testVisibility() throws Exception {
+      System.out.println("testVisibility : testVisibility");
+
+      TAFService service = TAFService.getInstance();
+      TAF taf = service.decode(tafEncoded);
+      Visibility visi = taf.getVisibility();
+      String str = visi.getMainVisibility();
+      assertEquals("CAVOK", str);
+
+      int visiInt = visi.getMainVisibilityMeters();
+      assertEquals("Visivility", 10000, visiInt);
+   }
 }

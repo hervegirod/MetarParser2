@@ -11,10 +11,11 @@ import static org.junit.Assert.*;
 import java.util.Locale;
 import io.github.mivek.internationalization.Messages;
 import io.github.mivek.model.MessageLevel;
+import io.github.mivek.model.Visibility;
 
 /**
  *
- * @author scdsahv
+ * @version 0.4
  */
 public class TAFServiceUSTest {
    private static String tafEncoded = "TAF LFPG 150500Z 1506/1612 17005KT 6000 SCT012 \n"
@@ -51,16 +52,35 @@ public class TAFServiceUSTest {
     */
    @Test
    public void testWindToString() throws Exception {
-      System.out.println("TAFServiceFRTest : testWindToString");
+      System.out.println("TAFServiceUSTest : testWindToString");
 
       TAFService service = TAFService.getInstance();
       TAF taf = service.decode(tafEncoded);
       Wind wind = taf.getWind();
 
       String str = wind.getMessage(MessageLevel.COMPACT);
-      assertEquals("vitesse 5 KT direction 170", str);
+      assertEquals("speed 5 KT direction 170", str);
 
       str = wind.getMessage(MessageLevel.NORMAL);
-      assertEquals("vitesse 5 KT direction 170", str);
+      assertEquals("speed 5 KT direction 170", str);
+
+   }
+
+   /**
+    * Test of decode method, of class TAFService.
+    */
+   @Test
+   public void testVisibility() throws Exception {
+      System.out.println("TAFServiceUSTest : testVisibility");
+
+      TAFService service = TAFService.getInstance();
+      TAF taf = service.decode(tafEncoded);
+
+      Visibility visi = taf.getVisibility();
+      String str = visi.getMainVisibility();
+      assertEquals("6000m", str);
+
+      int visiInt = visi.getMainVisibilityMeters();
+      assertEquals("Visivility", 6000, visiInt);
    }
 }

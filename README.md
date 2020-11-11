@@ -203,3 +203,6 @@ Changes from the original project:
 0.2 : 
 - Fix the humidity computation
 
+0.3 : 
+- Change the visibility text message from >10km to CAVOK
+
